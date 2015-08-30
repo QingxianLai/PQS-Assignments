@@ -1,0 +1,15 @@
+Please enter your code review in this file as plain text
+and make sure to include it when you commit your project.
+
+### Stopwatch.java
+1. class variable `id` is package-private. Since we should make our class as less accessive as possible, it should be specified as private and use public setter and getter method to manage it.
+
+2. As recommended by Effective java, we should always override the toString() method which is missed here. Also
+
+3. The `reset` method doesn't follow the requirement described in the IStopwatch interface. The interface says: will stop the watch if it is running, but in this method it throws an exception. And it initialize the startTime which is not necessary.
+
+
+### StopwatchFactory.java
+1. line 17 is too long
+
+

@@ -1,0 +1,24 @@
+Please enter your code review in this file as plain text
+and make sure to include it when you commit your project.
+
+### Package
+
+1. EmailAddress,Entry,Name,PhoneNumber,PostalAddress are only used in this package, so they should be package-private classes instead of public classes. This may not be true since the public API has to use those classes, but it still problemtic and make it quite verbose. See details in the Entry.java section below. In my opinion, just using the build-in types, like string, to build an entry would be better. 
+
+2. This class is not thread safe. For example, thread A was adding new entry, which was stopped by kernal right after it found the entry was duplicated. Then thread B removed that entry. When it came back to thread A, it still thought the entry was duplicated, so it returned, causing one entry lose.
+
+3. All the classes in this package have overriden the `equals()` method. In my opinion, this is not necessary. It is hard to compare instances without a clear criterion. For example, there is a bug in the equals method of class Name: It compares the first name and last name useing string's equals(), however, the first name and/or the last name could be null and calling equals on null will trigger a null exception and stop the whole program. And it is not necessary and often impossible to check the duplication of every Entry: how do a computer know two names refer to one person or not?
+
+### AddressBook.java
+
+1. In the `add` method, the author choosed to check duplication before adding new entry, which is not necessary.
+
+2. all `search` method return array of entries. However, the javadoc says they will return a list of entry. And also the <Effective java> memtioned, we should prefer lists to arrays. 
+
+### Entry.java
+
+1. very strange indentation from line 27 - 30, they should be on the same level of the previous line. Besides, the code from line 34 -39 should be in the next level indentation since they are in the constructor method. I believe this is because he used both tab `\t` and two space `\s` as indentation in this code, and the tab was set to 2 spaces wide in his IDE, but on my machine, it is different. So it looks a little comfusing at the first glance.  
+
+2. This class use a builder pattern to construct instance which is very good idea. However, the builder interface only accept his own classes, like `Name`,     PhoneNumber`. So if a user want to construct an entry, he has to construct all the attribute class before that. And for the class `Name`, it need two argument to construct which are FirstName and LastName. But some people may have middle name, and some people (from othe country) may have more complex names. This is also happend to other classes: `PhoneNumber`, `EmailAddress`, `PostalAddress`. Using a string to represent them maybe more reasonable.
+
+
